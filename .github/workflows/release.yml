@@ -31,10 +31,21 @@ jobs:
           name: criu
           path: criu/criu
 
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload executable
         uses: actions/upload-release-asset@v1
         with:
-          tag_name: ${{ github.ref_name }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: criu/criu
           asset_name: criu
           asset_content_type: application/octet-stream
